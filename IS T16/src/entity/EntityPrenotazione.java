@@ -4,44 +4,32 @@ import java.util.Date;
 
 
 public class EntityPrenotazione {
+
     private int id;
     private int idFarmacia;
-    private int idFarmacista;
-    private int idPaziente;
+    private String mailFarmacista;
+    private String CF;
     private Date dataPrenotazione;
     private Date orarioPrenotazione;
     private int esito;
     private String Anamnesi;
-    private int VaccinoType;
+    private int vaccinoType;
+    private int idTurno;
 
-    private enum VaccinoType {
-    PFISCHIO,
-    ANTIQUA,
-    ASPERA_ZENZERO;
-    }
-
-    private enum esito {
-    NON_PRESENTE,
-    COMPLETATA,
-    ANNULLATA,
-    CONFERMATA,
-    RIFIUTATA,
-    IN_ATTESA;
-    }
-
-    public EntityPrenotazione(int id, int idFarmacia, int idFarmacista, int idPaziente, Date dataPrenotazione, Date orarioPrenotazione, String anamnesi, int vaccinoType, int esito) {
+    public EntityPrenotazione(int id, int idFarmacia, String mailFarmacista, String CF, Date dataPrenotazione, Date orarioPrenotazione, String anamnesi, int vaccinoType, int esito, int idTurno) {
         if (dataPrenotazione == null || orarioPrenotazione == null) {
             throw new IllegalArgumentException("Data e orario di prenotazione non possono essere null");
         }
         this.id = id;
         this.idFarmacia = idFarmacia;
-        this.idFarmacista = idFarmacista;
-        this.idPaziente = idPaziente;
+        this.mailFarmacista = mailFarmacista;
+        this.CF = CF;
         this.dataPrenotazione = dataPrenotazione;
         this.orarioPrenotazione = orarioPrenotazione;
         this.Anamnesi = anamnesi;
-        this.VaccinoType = vaccinoType;
+        this.vaccinoType = vaccinoType;
         this.esito = esito;
+        this.idTurno = idTurno;
     }
 
     public int getId() {
@@ -60,20 +48,23 @@ public class EntityPrenotazione {
         this.idFarmacia = idFarmacia;
     }
 
-    public int getIdFarmacista() {
-        return idFarmacista;
+    public String getMailFarmacista() {
+        return mailFarmacista;
     }
 
-    public void setIdFarmacista(int idFarmacista) {
-        this.idFarmacista = idFarmacista;
+    public void setMailFarmacista(String mailFarmacista) {
+        if (mailFarmacista == null || mailFarmacista.isEmpty()) {
+            throw new IllegalArgumentException("Email del farmacista non può essere null o vuota");
+        }
+        this.mailFarmacista = mailFarmacista;
     }
 
-    public int getIdPaziente() {
-        return idPaziente;
+    public String getCF() {
+        return CF;
     }
 
-    public void setIdPaziente(int idPaziente) {
-        this.idPaziente = idPaziente;
+    public void setCF(String CF) {
+        this.CF = CF;
     }
 
     public Date getDataPrenotazione() {
@@ -115,10 +106,18 @@ public class EntityPrenotazione {
     }
 
     public int getVaccinoType() {
-        return VaccinoType;
+        return vaccinoType;
     }
 
     public void setVaccinoType(int vaccinoType) {
-        this.VaccinoType = vaccinoType;
+        this.vaccinoType = vaccinoType;
+    }
+
+    public int getIdTurno() {
+        return idTurno;
+    }
+
+    public void setIdTurno(int idTurno) {
+        this.idTurno = idTurno;
     }
 }

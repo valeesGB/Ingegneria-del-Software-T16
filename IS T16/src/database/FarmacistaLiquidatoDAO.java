@@ -17,7 +17,7 @@ public class FarmacistaLiquidatoDAO {
         try (Connection connection = DBManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(INSERT_FARMACISTA_LIQUIDATO)) {
             preparedStatement.setInt(1, farmacistaLiquidato.getId());
-            preparedStatement.setDate(2, farmacistaLiquidato.getDataLiquidazione());
+            preparedStatement.setDate(2, new java.sql.Date(farmacistaLiquidato.getDataLiquidazione().getTime()));
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             throw new DAOException("Error adding Farmacista Liquidato: " + e.getMessage());

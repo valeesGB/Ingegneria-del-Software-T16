@@ -2,7 +2,6 @@ package entity;
 
 import java.util.Date;
 
-
 public class EntityFarmacistaLiquidato {
     private int id;
     private String nome;

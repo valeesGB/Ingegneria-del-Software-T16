@@ -15,7 +15,7 @@ public class FarmacistaDAO {
 
     public void addFarmacista(EntityFarmacista farmacista) throws DAOException, DBConnectionException {
         try (Connection connection = DBManager.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(INSERT_FARMACISTA)) {
+            PreparedStatement preparedStatement = connection.prepareStatement(INSERT_FARMACISTA)) {
             preparedStatement.setString(1, farmacista.getNome());
             preparedStatement.setString(2, farmacista.getCognome());
             preparedStatement.setString(3, farmacista.getEmail());
