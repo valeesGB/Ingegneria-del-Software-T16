@@ -8,7 +8,6 @@ Segui questi passaggi per eseguire l’applicazione in VS Code.
 
 - Visual Studio Code installato  
 - Estensioni VS Code:
-  - **Java**  
   - **Java Extension Pack**
 
 ---
@@ -34,12 +33,6 @@ Segui questi passaggi per eseguire l’applicazione in VS Code.
 
 ## 4. Esecuzione dell’applicazione
 
-1. Nel file explorer di VS Code, vai nella cartella `boundary`.  
-2. Individua il file `LoginFrame.java`.  
-3. Clic destro su `LoginFrame.java` → **Run Java**.  
-   - Se non parte, apri il pannello **Run and Debug** (icona del play ▶️ sulla barra laterale)  
-     e avvia la configurazione Java predefinita.
-
----
+1. Avvia il progetto in **Java Projects** premendo su Run and Debug.
 
 > 🎉 A questo punto l’applicazione dovrebbe partire sul tuo computer!
