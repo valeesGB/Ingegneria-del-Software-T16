@@ -1,27 +1,21 @@
 package entity;
 
-
 public class EntityCapoFarmacia {
-    private int id;
     private String nome;
     private String cognome;
     private String email;
-    private String psw;
+    private String password;
+    private int idFarmacia;
 
-    public EntityCapoFarmacia(int id, String nome, String cognome, String email) {
-        this.id = id;
+    public EntityCapoFarmacia(String nome, String cognome, String email, String password, int idFarmacia) {
         this.nome = nome;
         this.cognome = cognome;
         this.email = email;
-        this.psw = null;
+        this.password = password;
+        this.idFarmacia = idFarmacia;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
+    public EntityCapoFarmacia() {
     }
 
     public String getNome() {
@@ -48,11 +42,19 @@ public class EntityCapoFarmacia {
         this.email = email;
     }
 
-    public String getPsw() {
-        return psw;
+    public String getPassword() {
+        return password;
     }
 
-    public void setPsw(String psw) {
-        this.psw = psw;
-    }   
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public int getIdFarmacia() {
+        return idFarmacia;
+    }
+
+    public void setIdFarmacia(int idFarmacia) {
+        this.idFarmacia = idFarmacia;
+    }
 }

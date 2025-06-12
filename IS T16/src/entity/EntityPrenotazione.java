@@ -7,30 +7,29 @@ public class EntityPrenotazione {
 
     private int id;
     private int idFarmacia;
-    private String mailFarmacista;
     private String CF;
     private Date dataPrenotazione;
     private Date orarioPrenotazione;
-    private int esito;
+    private String esito;
     private String Anamnesi;
-    private int vaccinoType;
+    private String vaccinoType;
     private int idTurno;
 
-    public EntityPrenotazione(int id, int idFarmacia, String mailFarmacista, String CF, Date dataPrenotazione, Date orarioPrenotazione, String anamnesi, int vaccinoType, int esito, int idTurno) {
+    public EntityPrenotazione(int id, int idFarmacia, String CF, Date dataPrenotazione, Date orarioPrenotazione, String anamnesi, String vaccinoType, String esito2, int idTurno) {
         if (dataPrenotazione == null || orarioPrenotazione == null) {
             throw new IllegalArgumentException("Data e orario di prenotazione non possono essere null");
         }
         this.id = id;
         this.idFarmacia = idFarmacia;
-        this.mailFarmacista = mailFarmacista;
         this.CF = CF;
         this.dataPrenotazione = dataPrenotazione;
         this.orarioPrenotazione = orarioPrenotazione;
         this.Anamnesi = anamnesi;
         this.vaccinoType = vaccinoType;
-        this.esito = esito;
+        this.esito = esito2;
         this.idTurno = idTurno;
     }
+
 
     public int getId() {
         return id;
@@ -48,16 +47,6 @@ public class EntityPrenotazione {
         this.idFarmacia = idFarmacia;
     }
 
-    public String getMailFarmacista() {
-        return mailFarmacista;
-    }
-
-    public void setMailFarmacista(String mailFarmacista) {
-        if (mailFarmacista == null || mailFarmacista.isEmpty()) {
-            throw new IllegalArgumentException("Email del farmacista non può essere null o vuota");
-        }
-        this.mailFarmacista = mailFarmacista;
-    }
 
     public String getCF() {
         return CF;
@@ -89,11 +78,11 @@ public class EntityPrenotazione {
         this.orarioPrenotazione = orarioPrenotazione;
     }
 
-    public int getEsito() {
+    public String getEsito() {
         return esito;
     }
 
-    public void setEsito(int esito) {
+    public void setEsito(String esito) {
         this.esito = esito;
     }
 
@@ -105,11 +94,11 @@ public class EntityPrenotazione {
         Anamnesi = anamnesi;
     }
 
-    public int getVaccinoType() {
+    public String getVaccinoType() {
         return vaccinoType;
     }
 
-    public void setVaccinoType(int vaccinoType) {
+    public void setVaccinoType(String vaccinoType) {
         this.vaccinoType = vaccinoType;
     }
 

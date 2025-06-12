@@ -5,22 +5,11 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DBManager {
-    private static final String DB_URL = "jdbc:mysql://localhost:3306/t16";
-    private static final String DB_USER = "root";
-    private static final String DB_PASSWORD = null;
-
-    private static Connection connection;
+    private static final String URL = "jdbc:mysql://localhost:3306/t16";
+    private static final String USER = "root";
+    private static final String PASSWORD = "";
 
     public static Connection getConnection() throws SQLException {
-        if (connection == null || connection.isClosed()) {
-            connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-        }
-        return connection;
-    }
-
-    public static void closeConnection() throws SQLException {
-        if (connection != null && !connection.isClosed()) {
-            connection.close();
-        }
+        return DriverManager.getConnection(URL, USER, PASSWORD);
     }
 }

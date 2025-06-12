@@ -1,73 +1,75 @@
 package database;
 
+import entity.EntityFarmacia;
+import exception.DAOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
-import entity.EntityFarmacia;
-import exception.DAOException;
-import exception.DBConnectionException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FarmaciaDAO {
-    private static final String INSERT_FARMACIA = "INSERT INTO Farmacia (id, nome, indirizzo, citta) VALUES (?, ?, ?, ?)";
-    private static final String SELECT_FARMACIA_BY_ID = "SELECT * FROM Farmacia WHERE id = ?";
-    private static final String SELECT_FARMACIA_BY_NAME_ADDRESS = "SELECT IdFarmacia FROM Farmacia WHERE Nome = ? and Indirizzo = ?";
+    private Connection conn;
 
-
-    public void addFarmacia(EntityFarmacia farmacia) throws DAOException, DBConnectionException {
-        try (Connection connection = DBManager.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(INSERT_FARMACIA)) {
-            preparedStatement.setInt(1, farmacia.getId());
-            preparedStatement.setString(2, farmacia.getNome());
-            preparedStatement.setString(3, farmacia.getIndirizzo());
-            preparedStatement.setString(4, farmacia.getCitta());
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            throw new DAOException("Error adding Farmacia: " + e.getMessage());
+    public FarmaciaDAO() throws DAOException {
+        try {
+            this.conn = DBManager.getConnection();
+        } catch (SQLException ex) {
+            throw new DAOException("Impossibile connettersi al DB", ex);
         }
     }
 
-    public EntityFarmacia readFarmaciaById(int id) throws DAOException, DBConnectionException {
-        EntityFarmacia farmacia = null;
-        try (Connection connection = DBManager.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_FARMACIA_BY_ID)) {
-            preparedStatement.setInt(1, id);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            if (resultSet.next()) {
-                farmacia = new EntityFarmacia(
-                    resultSet.getInt("id"),
-                    resultSet.getString("nome"),
-                    resultSet.getString("indirizzo"),
-                    resultSet.getString("citta")
-                );
+    public List<EntityFarmacia> findAll() throws DAOException {
+        List<EntityFarmacia> lista = new ArrayList<>();
+        String query = "SELECT * FROM farmacia";
+        try (Statement st = conn.createStatement();
+             ResultSet rs = st.executeQuery(query)) {
+            while (rs.next()) {
+                EntityFarmacia f = new EntityFarmacia();
+                f.setId(rs.getInt("Id"));
+                f.setNome(rs.getString("Nome"));
+                f.setIndirizzo(rs.getString("Indirizzo"));
+                f.setCitta(rs.getString("Citta"));
+                lista.add(f);
             }
-        } catch (SQLException e) {
-            throw new DAOException("Error reading Farmacia by ID: " + e.getMessage());
+        } catch (SQLException ex) {
+            throw new DAOException("Errore in findAll()", ex);
         }
-        return farmacia;
+        return lista;
     }
 
-    public int readIdFarmaciaByNameAddress(String name, String address) throws DAOException, DBConnectionException {
-    int idFarmacia = -1; // Default value if not found
-
-        try (Connection connection = DBManager.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(SELECT_FARMACIA_BY_NAME_ADDRESS)) {
-            preparedStatement.setString(1, name);
-            preparedStatement.setString(2, address);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            if (resultSet.next()) {
-                idFarmacia = resultSet.getInt("IdFarmacia");
+    public EntityFarmacia findByPrimaryKey(int id) throws DAOException {
+        EntityFarmacia f = null;
+        String query = "SELECT * FROM farmacia WHERE Id = ?";
+        try (PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                f = new EntityFarmacia();
+                f.setId(rs.getInt("Id"));
+                f.setNome(rs.getString("Nome"));
+                f.setIndirizzo(rs.getString("Indirizzo"));
+                f.setCitta(rs.getString("Citta"));
             }
-        } catch (SQLException e) {
-            throw new DAOException("Error reading Farmacia by ID: " + e.getMessage());
+        } catch (SQLException ex) {
+            throw new DAOException("Errore in findByPrimaryKey()", ex);
         }
+        return f;
+    }
 
-        if (idFarmacia == -1) {
-            throw new DAOException("Farmacia not found with name: " + name + " and address: " + address);
-        }
-        else {
-            return idFarmacia;
+    public void insert(EntityFarmacia f) throws DAOException {
+        String query = "INSERT INTO farmacia (Id, Nome, Indirizzo, Citta) VALUES (?, ?, ?, ?)";
+        try (PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setInt(1, f.getId());
+            ps.setString(2, f.getNome());
+            ps.setString(3, f.getIndirizzo());
+            ps.setString(4, f.getCitta());
+            ps.executeUpdate();
+        } catch (SQLException ex) {
+            throw new DAOException("Errore in insert()", ex);
         }
     }
+
 }

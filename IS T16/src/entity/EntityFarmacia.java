@@ -1,18 +1,12 @@
 package entity;
 
-
 public class EntityFarmacia {
     private int id;
     private String nome;
     private String indirizzo;
     private String citta;
 
-    public EntityFarmacia(int id, String nome, String indirizzo, String citta) {
-        this.id = id;
-        this.nome = nome;
-        this.indirizzo = indirizzo;
-        this.citta = citta;
-    }   
+    public EntityFarmacia() {}
 
     public int getId() {
         return id;
@@ -20,7 +14,7 @@ public class EntityFarmacia {
 
     public void setId(int id) {
         this.id = id;
-    }   
+    }
 
     public String getNome() {
         return nome;

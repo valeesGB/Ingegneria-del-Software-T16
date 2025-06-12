@@ -1,47 +1,98 @@
 package database;
 
+import entity.EntityFarmacista;
+import exception.DAOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
-import entity.EntityFarmacista;
-import exception.DAOException;
-import exception.DBConnectionException;
+import java.util.List;
 
 public class FarmacistaDAO {
-    private static final String INSERT_FARMACISTA = "INSERT INTO Farmacista (nome, cognome, email) VALUES (?, ?, ?)";
-    private static final String SELECT_FARMACISTA_BY_ID = "SELECT * FROM Farmacista WHERE id = ?";
+    private Connection conn;
 
-    public void addFarmacista(EntityFarmacista farmacista) throws DAOException, DBConnectionException {
-        try (Connection connection = DBManager.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(INSERT_FARMACISTA)) {
-            preparedStatement.setString(1, farmacista.getNome());
-            preparedStatement.setString(2, farmacista.getCognome());
-            preparedStatement.setString(3, farmacista.getEmail());
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            throw new DAOException("Error adding Farmacista: " + e.getMessage());
+    public FarmacistaDAO() throws DAOException {
+        try {
+            this.conn = DBManager.getConnection();
+        } catch (SQLException ex) {
+            throw new DAOException("Impossibile connettersi al DB", ex);
         }
     }
 
-    public EntityFarmacista readFarmacistaById(int id) throws DAOException, DBConnectionException {
-        EntityFarmacista farmacista = null;
-        try (Connection connection = DBManager.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_FARMACISTA_BY_ID)) {
-            preparedStatement.setInt(1, id);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            if (resultSet.next()) {
-                farmacista = new EntityFarmacista(
-                    resultSet.getInt("id"),
-                    resultSet.getString("nome"),
-                    resultSet.getString("cognome"),
-                    resultSet.getString("email")
-                );
+    public EntityFarmacista findByEmail(String email) throws DAOException {
+        EntityFarmacista f = null;
+        String query = "SELECT * FROM farmacista WHERE Email = ?";
+        try (PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setString(1, email);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                f = new EntityFarmacista();
+                f.setNome(rs.getString("Nome"));
+                f.setCognome(rs.getString("Cognome"));
+                f.setEmail(rs.getString("Email"));
+                f.setPassword(rs.getString("Password"));
+                f.setIdFarmacia(rs.getInt("IdFarmacia"));
             }
-        } catch (SQLException e) {
-            throw new DAOException("Error reading Farmacista by ID: " + e.getMessage());
+        } catch (SQLException ex) {
+            throw new DAOException("Errore in findByEmail()", ex);
         }
-        return farmacista;
+        return f;
+    }
+
+    public boolean authenticate(String email, String password) throws DAOException {
+        String query = "SELECT Email FROM farmacista WHERE Email = ? AND Password = ?";
+        try (PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setString(1, email);
+            ps.setString(2, password);
+            ResultSet rs = ps.executeQuery();
+            return rs.next();
+        } catch (SQLException ex) {
+            throw new DAOException("Errore in authenticate()", ex);
+        }
+    }
+
+    public void insert(EntityFarmacista f) throws DAOException {
+        String query = "INSERT INTO farmacista (Nome, Cognome, Email, Password, IdFarmacia) VALUES (?, ?, ?, ?, ?)";
+        try (PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setString(1, f.getNome());
+            ps.setString(2, f.getCognome());
+            ps.setString(3, f.getEmail());
+            ps.setString(4, f.getPassword());
+            ps.setInt(5, f.getIdFarmacia());
+            ps.executeUpdate();
+        } catch (SQLException ex) {
+            throw new DAOException("Errore in insert()", ex);
+        }
+    }
+
+    public List<EntityFarmacista> getAll() throws DAOException {
+        List<EntityFarmacista> lista = new java.util.ArrayList<>();
+        String query = "SELECT * FROM farmacista";
+        try (PreparedStatement ps = conn.prepareStatement(query);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                EntityFarmacista f = new EntityFarmacista();
+                f.setNome(rs.getString("Nome"));
+                f.setCognome(rs.getString("Cognome"));
+                f.setEmail(rs.getString("Email"));
+                f.setPassword(rs.getString("Password"));
+                f.setIdFarmacia(rs.getInt("IdFarmacia"));
+                lista.add(f);
+            }
+        } catch (SQLException ex) {
+            throw new DAOException("Errore in getAll()", ex);
+        }
+        return lista;
+    }
+
+    public void assegnaFarmacia(String emailFarmacista, int idFarmacia) throws DAOException {
+        String query = "UPDATE farmacista SET IdFarmacia = ? WHERE Email = ?";
+        try (PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setInt(1, idFarmacia);
+            ps.setString(2, emailFarmacista);
+            ps.executeUpdate();
+        } catch (SQLException ex) {
+            throw new DAOException("Errore in assegnaFarmacia()", ex);
+        }
     }
 }
